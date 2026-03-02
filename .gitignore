@@ -1,0 +1,22 @@
+# Keil 垃圾文件屏蔽规则
+*.o
+*.d
+*.crf
+*.dep
+*.lnp
+*.axf
+*.htm
+*.map
+*.sct
+*.iex
+*.pbi
+*.build_log.htm
+JLinkLog.txt
+*.uvguix.*
+*.bak
+*.uvoptx
+
+# 屏蔽 Keil 自动生成的文件夹
+Objects/
+Listings/
+RTE/
