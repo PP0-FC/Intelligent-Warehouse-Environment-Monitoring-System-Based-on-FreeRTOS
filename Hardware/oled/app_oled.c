@@ -1,5 +1,10 @@
 #include "app_oled.h"
 
+/**
+ * @brief OLED显示界面初始化
+ * @param None
+ * @retval None
+ */
 void OLED_UI_Init(void)
 {
 		OLED_ShowChinese_F16X16(0, 2, 0);  // 第0行 第2列：显示“环”
@@ -18,6 +23,11 @@ void OLED_UI_Init(void)
 		OLED_ShowString_F8X16( 2 , 4 , (uint8_t *)":" );
 }
 
+/**
+ * @brief OLED显示数据更新
+ * @param data: DHT11传感器数据结构体指针
+ * @retval None
+ */
 void OLED_DATA_Update(DHT11_DATA_TYPEDEF *data)
 {
 	  //用字符串输出温度

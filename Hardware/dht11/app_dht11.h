@@ -3,8 +3,8 @@
 
 #include "main.h"
 
-/* º¯ÊýÉùÃ÷ */
-void Dht11_ReadAndPrint(void);
-void Dht11_ReadAndShow(void);
+/* ???? */
+void Dht11_ReadAndPrint(void);      // ??DHT11????????
+void Dht11_ReadAndShow(void);       // ??DHT11?????OLED??
 
 #endif

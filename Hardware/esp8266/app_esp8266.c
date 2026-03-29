@@ -89,14 +89,16 @@ void ESP8266_Task(void)
   */
 void ESP8266_Bemfa(void)
 {
+    // 构造订阅字符串
 	char sub_str[128];
-	sprintf(sub_str , "cmd=1&uid=db0e980dc50b4420ae62c2bd10b15648&topic=DHT11\r\n");
+	sprintf(sub_str , "cmd=1&uid=BEMFA_UID&topic=BEMFA_TOPIC\r\n");
 	
-	xSemaphoreTake(TxSemaphore, 0);
+	xSemaphoreTake(TxSemaphore, 0);     // 先清空信号量，确保后续等待时能正确获取
 	
-	ESP8266_SendString(sub_str);
+	ESP8266_SendString(sub_str);        // 发送订阅请求
 	
-	if (xSemaphoreTake(TxSemaphore, pdMS_TO_TICKS(1000)) == pdTRUE)
+    // 等待订阅结果，最长等待1秒
+	if (xSemaphoreTake(TxSemaphore, pdMS_TO_TICKS(1000)) == pdTRUE)     // 成功获取信号量，说明订阅成功
 	{
 		printf(">>>订阅成功\r\n");
 	}

@@ -15,9 +15,14 @@ void ESP8266_RX_DMA_Init(void)
     __HAL_RCC_DMA1_CLK_ENABLE();                   // 使能 DMA1 控制器时钟
 
     HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 6, 0);// 设置 DMA1_Channel3 中断优先级
-    HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);       // 使能 DMA1_Channel3 中断
+    HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);        // 使能 DMA1_Channel3 中断
 }
 
+/**
+  * @brief  初始化 USART1
+  * @param  无
+  * @retval 无
+  */
 void MX_USART1_UART_Init(void)
 {
 	
@@ -36,6 +41,11 @@ void MX_USART1_UART_Init(void)
 
 }
 
+/**
+  * @brief  初始化 USART3
+  * @param  无
+  * @retval 无
+  */
 void MX_USART3_UART_Init(void)
 {
 	
@@ -54,16 +64,22 @@ void MX_USART3_UART_Init(void)
 
 }
 
+/**
+  * @brief  UART MSP 初始化
+  * @param  uartHandle: UART 句柄
+  * @retval 无
+  */
 void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
 {
 
   GPIO_InitTypeDef GPIO_InitStruct = {0};
+  // UART1 和 UART3 的 GPIO 配置和时钟使能
   if(uartHandle->Instance==USART1)
   {
-
+    // 外设时钟使能
     __HAL_RCC_USART1_CLK_ENABLE();
-
     __HAL_RCC_GPIOA_CLK_ENABLE();
+
     /**USART1 GPIO Configuration
     PA9     ------> USART1_TX
     PA10     ------> USART1_RX
@@ -85,13 +101,13 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
   }
 	else if(uartHandle->Instance==USART3)
   {
-
+    // 外设时钟使能
     __HAL_RCC_USART3_CLK_ENABLE();
-
     __HAL_RCC_GPIOB_CLK_ENABLE();
+
     /**USART3 GPIO Configuration
-    PB10     ------> USART1_TX
-    PB11     ------> USART1_RX
+    PB10     ------> USART3_TX
+    PB11     ------> USART3_RX
     */
     GPIO_InitStruct.Pin = GPIO_PIN_10;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -104,14 +120,15 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 		
 		/* USART3 DMA 初始化：RX 使用 DMA1 通道3 */
-    hdma_usart3_rx.Instance = DMA1_Channel3;         // 选择 DMA1 通道3
-    hdma_usart3_rx.Init.Direction = DMA_PERIPH_TO_MEMORY; // 数据方向：外设到内存
-    hdma_usart3_rx.Init.PeriphInc = DMA_PINC_DISABLE;     // 外设地址不自增
-    hdma_usart3_rx.Init.MemInc = DMA_MINC_ENABLE;         // 内存地址自增
-    hdma_usart3_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE; // 外设数据按字节对齐
-    hdma_usart3_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;    // 内存数据按字节对齐
-    hdma_usart3_rx.Init.Mode = DMA_NORMAL;            // 普通模式（非循环）
-    hdma_usart3_rx.Init.Priority = DMA_PRIORITY_LOW;  // DMA 优先级低
+    hdma_usart3_rx.Instance = DMA1_Channel3;                   		   	 // 选择 DMA1 通道3
+    hdma_usart3_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;        		 // 数据方向：外设到内存
+    hdma_usart3_rx.Init.PeriphInc = DMA_PINC_DISABLE;     				 // 外设地址不自增
+    hdma_usart3_rx.Init.MemInc = DMA_MINC_ENABLE;        				 // 内存地址自增
+    hdma_usart3_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE; 		 // 外设数据按字节对齐
+    hdma_usart3_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;    		 // 内存数据按字节对齐
+    hdma_usart3_rx.Init.Mode = DMA_NORMAL;            					 // 普通模式（非循环）
+    hdma_usart3_rx.Init.Priority = DMA_PRIORITY_LOW; 					 // DMA 优先级低
+
     if (HAL_DMA_Init(&hdma_usart3_rx) != HAL_OK)      // 初始化 DMA 并检查是否成功
     {
       Error_Handler();                                // 初始化失败，进入错误处理
@@ -126,6 +143,11 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
   }
 }
 
+/**
+  * @brief  UART MSP 反初始化
+  * @param  uartHandle: UART 句柄
+  * @retval 无
+  */
 void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 {
 
@@ -147,14 +169,21 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
     __HAL_RCC_USART3_CLK_DISABLE();
 
     /**USART3 GPIO Configuration
-    PB10     ------> USART1_TX
-    PB11     ------> USART1_RX
+    PB10     ------> USART3_TX
+    PB11     ------> USART3_RX
     */
     HAL_GPIO_DeInit(GPIOB, GPIO_PIN_10|GPIO_PIN_11);
 
   }
 }
 
+/**
+ * @brief  重定向 printf 函数到 USART1
+ * @param  ch: 要发送的字符
+ * @param  f: 文件指针（未使用）
+ * @retval 发送的字符
+ * @note   通过 USART1 发送字符，使 printf 输出到串口终端
+ */
 int fputc(int ch, FILE *f)
 {
          HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, HAL_MAX_DELAY);

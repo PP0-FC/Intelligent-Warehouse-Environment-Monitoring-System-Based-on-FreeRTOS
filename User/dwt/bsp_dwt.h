@@ -26,14 +26,16 @@
 #define DEMCR_TRCENA            (1<<24)
 #define DWT_CTRL_CYCCNTENA      (1<<0)
 
+/* DWT函数声明 */
+void DWT_Init(void);        // DWT 初始化函数
+uint32_t DWT_GetTick(void);  // 获取当前 CYCCNT 计数值
+uint32_t DWT_TickToMicrosecond(uint32_t tick,uint32_t frequency);       // 将 CYCCNT 计数值转换为微秒
+uint32_t DWT_TickToMillisecond(uint32_t tick,uint32_t frequency);       // 将 CYCCNT 计数值转换为毫秒
+uint32_t DWT_TickToSecond(uint32_t tick,uint32_t frequency);            // 将 CYCCNT 计数值转换为秒
 
-void DWT_Init(void);
-uint32_t DWT_GetTick(void);
-uint32_t DWT_TickToMicrosecond(uint32_t tick,uint32_t frequency);
-
-void DWT_DelayUs(uint32_t time);
-void DWT_DelayMs(uint32_t time);
-void DWT_DelayS(uint32_t time);
+void DWT_DelayUs(uint32_t time);    // DWT 微秒级延时函数
+void DWT_DelayMs(uint32_t time);    // DWT 毫秒级延时函数
+void DWT_DelayS(uint32_t time);     // DWT 秒级延时函数
 
 
 #endif /* __BSP_DWT_H  */

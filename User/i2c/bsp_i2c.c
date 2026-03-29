@@ -1,8 +1,12 @@
 #include "bsp_i2c.h"
 
-I2C_HandleTypeDef hi2c1;
+I2C_HandleTypeDef hi2c1;    // I2C1 句柄
 
-/* I2C1 init function */
+/**
+  * @brief  I2C1 初始化函数
+  * @param  无
+  * @retval 无
+  */
 void MX_I2C1_Init(void)
 {
 
@@ -22,6 +26,11 @@ void MX_I2C1_Init(void)
 
 }
 
+/**
+  * @brief  I2C MSP 初始化函数
+  * @param  i2cHandle: I2C 句柄
+  * @retval 无
+  */
 void HAL_I2C_MspInit(I2C_HandleTypeDef* i2cHandle)
 {
 
@@ -45,6 +54,11 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* i2cHandle)
   }
 }
 
+/**
+  * @brief  I2C MSP 反初始化函数
+  * @param  i2cHandle: I2C 句柄
+  * @retval 无
+  */
 void HAL_I2C_MspDeInit(I2C_HandleTypeDef* i2cHandle)
 {
 
