@@ -71,3 +71,29 @@
 * 中文字库文件：`Hardware/OLED/oledfont.h`
 * 汉字数组 
 `const uint8_t chinese_library_16x16[][16]` ，在调用时确保索引正确。
+
+## 📂 工程目录结构
+
+```text
+📦 室内环境检测系统 - [FreeRTOS]
+├── 📂 Hardware               # 核心外设驱动与业务层 (🔥 核心亮点：BSP与APP分离)
+│   ├── 📂 dht11              # 温湿度传感器 (单总线驱动)
+│   ├── 📂 esp8266            # Wi-Fi 模块 (透传驱动与巴法云连接逻辑)
+│   └── 📂 oled               # OLED 屏幕 (I2C驱动、包含字模 bsp_fonts)
+│
+├── 📂 User                   # 用户主逻辑与底层配置
+│   ├── 📂 dwt                # DWT 精确微秒级延时驱动
+│   ├── 📂 i2c                # I2C 总线底层支持
+│   ├── 📂 led                # 状态指示灯底层支持
+│   ├── 📂 usart              # 串口通信底层支持
+│   ├── 📄 freertos.c         # 🧠 FreeRTOS 任务创建、队列与调度核心
+│   ├── 📄 main.c             # 主程序入口与外设初始化
+│   ├── 📄 main.h             # 全局宏定义
+│   ├── 📄 stm32f1xx_it.c     # 硬件中断服务函数 (ISR)
+│   └── 📄 stm32f1xx_hal_conf.h # HAL 库功能裁剪配置文件
+│
+├── 📂 FreeRTOS               # FreeRTOS V10+ 官方内核源码 (Inc/Portable/Scr)
+├── 📂 Libraries              # STM32 底层库函数 (HAL)
+├── 📂 Project                # Keil MDK 工程目录 (仅保留 .uvprojx 等工程配置)
+├── 📄 .gitignore             # Git 提交忽略配置 (屏蔽 .o/.axf 等编译产物)
+└── 📄 readme.md              # 项目自述文件
